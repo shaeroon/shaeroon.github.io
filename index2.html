@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+  <head>
+    <title>شاعرون</title>
+    <link rel="shortcut icon" href="site_data/logo.svg" type="image/x-icon">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="site_data/style.css">
+    <link rel="stylesheet" href="site_data/pyscript.css" />
+    <script defer src="site_data/pyscript.js"></script>
+  </head>
+  <body>
+    <h1 id="txt1"></h1>
+    <h1 id="txt2"></h1>
+    <h1 id="txt3"></h1>
+    <header>
+        <img src="site_data/logo-white.svg" alt="">
+        <h2 style="color: #52b4c6; margin: 20px 0; height: 50px; font-size: 30px;">نرم افزار شاعرون - ساخته شده توسط علی انصاری</h2>
+        <h2><a href="rahnama/iindex.html" style="display: block; color: #52b4c6;">راهنما</a></h2>
+    </header>
+    <div>
+    <article>
+    <section>
+    <h2>سبک شعر:</h2>
+    <p>
+        <input type="radio" name="grp1" id="s1" value="0" checked>
+        <label for="s1">حافظ</label>
+    </p>
+    <p>
+        <input type="radio" name="grp1" id="s2" value="1">
+        <label for="s2">فردوسی</label>
+    </p>
+    <p>
+        <input type="radio" name="grp1" id="s3" value="2">
+        <label for="s3">سعدی</label>
+    </p>
+    <p>
+        <input type="radio" name="grp1" id="s4" value="3">
+        <label for="s4">پروین اعتصامی</label>
+    </p>
+    </section>
+    <section>
+    <h2>قالب شعر:</h2>
+    <p>
+        <input type="radio" name="grp2" id="g1" value="0" checked>
+        <label for="g1">مثنوی</label>
+    </p>
+    <p>
+        <input type="radio" name="grp2" id="g2" value="1">
+        <label for="g2">غزل</label>
+    </p>
+    <p>
+        <input type="radio" name="grp2" id="g3" value="2">
+        <label for="g3">قطعه</label>
+    </p>
+    <p>
+        <input type="radio" name="grp2" id="g4" value="3">
+        <label for="g4">دوبیتی</label>
+    </p>
+    <p>
+        <input type="radio" name="grp2" id="g5" value="4">
+        <label for="g5">رباعی</label>
+    </p>
+    </section>
+    <section>
+    <h2>سایر تنظیمات:</h2>
+    <input type="text" id="ghafiye" placeholder="قافیه">
+    <input type="text" id="radif" placeholder="ردیف">
+    <input type="text" id="vazn" placeholder="وزن">
+    <input type="number" min="1" id="abyat" placeholder="تعداد ابیات">
+    <input type="button" id="btn" value="بسرای">
+    </section>
+    </article>
+    <section id="print"></section>
+    </div>
+    <script src="site_data/sabk.js"></script>
+    <script src="site_data/ghaleb.js"></script>
+    <py-script>
+    def sher(sabk, ghafiye, radif, vazn, abyat, ghaleb):
+      #imports
+      import random
+  
+      #erors
+      er1 = 'سبک مورد نظر وجود ندارد!!!'
+      er2 = 'وزن غیر U_!!!'
+      er3 = 'قالب تعریف نشده!!!'
+      er4 = 'نبودن قافیه!!!'
+      er5 = 'خرابی پایگاه داده!!!'
+      er6 = 'ردیف مورد نظر در پایگاه داده موجود نیست!!!'
+      er7 = 'مطابق نبودن ردیف با وزن!!!'
+  
+      #vazning
+      vazn = vazn.replace('مستفعلتن', '____').replace('مفاعیلن', 'U___').replace('فاعلاتن', '_U__').replace('مستفعلن', '__U_')
+      vazn = vazn.replace('مفعولن', '___').replace('فعولن', 'U__').replace('فاعلن', '_U_').replace('مفعول', '__U')
+      vazn = vazn.replace('فع.لن', '__').replace('فعل', 'U_').replace('فع لن', '__').replace('فع‌لن', '__')
+      vazn = vazn.replace('فعلات', 'UU__').replace('مفتعلن', '_UU_').replace('فاعلات', '_U_U').replace('مفاعلن', 'U_U_').replace('مفاعیل', 'U__U')
+      vazn = vazn.replace('فعلات', 'UU_U').replace('فعلن', 'UU_').replace('فاعل', '_UU').replace('فعول', 'U_U').replace('متفاعلن', 'UU_U_')
+      vazn = vazn.replace(' ', '').replace('u', 'U').replace('-', '_')
+      for i in range(len(vazn)):
+          if vazn[i] != 'U' and vazn[i] != '_':
+              return er2
+      print()
+      def vazn_of_words (world):
+          l = world.split('*')
+          txt = ''
+          for i in range(len(l)):
+              if len(l[i]) == 0:
+                  txt += 'U'
+              elif len(l[i]) == 1:
+                  txt += 'U'
+              elif len(l[i]) == 2:
+                  txt += '_'
+              elif len(l[i]) == 3 and l[i][1] in ['ا','ی','و'] and l[i][2] == 'ن':
+                  txt += '_'
+              else:
+                  txt += '_U'
+          return txt
+      def check_word_whith_vazn (word_vazn, check_vazn):
+          return word_vazn == check_vazn[-(len(word_vazn)):]
+      def dell_last_U (word):
+          if word['word'][-1] == 'ه' and word['vazn'][-1] == 'U':
+              vazn_tmp = word['vazn'][:-1] + '_'
+          elif word['vazn'][-1] == 'U':
+              vazn_tmp = word['vazn'][:-1]
+          else:
+              vazn_tmp = word['vazn']
+          return {'word':word['word'], 'vazn':vazn_tmp}
+  
+      #load_data
+      try:
+          divan = Element("txt1").element.innerHTML.replace('\n', ' ').split(' ')
+          taghti = Element("txt2").element.innerHTML.replace('\n', ' ').split(' ')
+      except:
+          return er1
+  
+      #data_encoding
+      data = []
+      if len(divan) != len(taghti):
+          return er5
+      for i in range(len(divan)):
+          data += [{'word': divan[i], 'vazn': vazn_of_words(taghti[i]), 'vazn-1': vazn_of_words(taghti[i][0:-1])}]
+      
+      #find_erors
+      try:
+          tmp = abyat + 1 / abyat
+      except:
+          abyat = 10
+      ghalebs_arr = ['مثنوی', 'غزل', 'قطعه', 'دوبیتی', 'رباعی']
+      if not ghaleb in ghalebs_arr:
+          return er3
+      if ghaleb == ghalebs_arr[0]:
+          radif = ''
+          if vazn == None or vazn == '':
+              if sabk == 'فردوسی' or ghaleb == 'سعدی':
+                  vazn = 'U__U__U__U_'
+              else:
+                  if random.random() > 0.5:
+                      vazn == '_U___U___U_'
+                  else:
+                      vazn == 'U___U___U__' 
+      else:
+          if ghafiye == None or ghafiye == '':
+              return er4
+          if vazn == None or vazn == '':
+              if ghaleb == ghalebs_arr[4]:
+                  vazn = '__UU__UU__UU_'
+              else:
+                  vazns_arr = ['U_U_UU__U_U_UU_', '_U___U___U___U_', '__U_U_UU__U_U_', '_U__U_U___', 'UU__UU__UU__UU_']
+                  vazn = random.choice(vazns_arr)
+      
+      #make_ghafiye
+      ghafiye_arr=[]
+      if ghaleb == ghalebs_arr[0]:
+          all_ghafiyes_words = []
+          all_ghafiyes_characters = []
+          for i in data:
+              if not i['word'][-2:] in all_ghafiyes_characters:
+                  all_ghafiyes_characters += [i['word'][-2:]]
+                  all_ghafiyes_words += [[]]
+              all_ghafiyes_words[all_ghafiyes_characters.index(i['word'][-2:])] += [i]
+          for i in all_ghafiyes_words:
+              arr_off_ghafiyes_with_same_end_many_times_off_word = i
+              arr_off_ghafiyes_with_same_end = []
+              for t in arr_off_ghafiyes_with_same_end_many_times_off_word:
+                  if not t in arr_off_ghafiyes_with_same_end and check_word_whith_vazn((dell_last_U(t)['vazn']), vazn):
+                      arr_off_ghafiyes_with_same_end += [t]
+              random.shuffle(arr_off_ghafiyes_with_same_end)
+              number_of_two_ghafiyes_with_same_end = int(len(arr_off_ghafiyes_with_same_end)/2)
+              for t in range(number_of_two_ghafiyes_with_same_end):
+                  ghafiye_arr += [[arr_off_ghafiyes_with_same_end[t*2], arr_off_ghafiyes_with_same_end[t*2+1]]]
+      else:
+          is_radif_find = False
+          for i in data:
+              if i['word'] == radif:
+                  is_radif_find = True
+                  radif = i
+                  break
+          if not is_radif_find:
+              if radif == None or radif == '':
+                  radif = {'word': '', 'vazn': '', 'vazn-1': ''}
+              else:
+                  return er6
+          
+          ghafiye_type_1 = []
+          ghafiye_type_2 = []
+          for i in data:
+              if i['word'][-(len(ghafiye)):] == ghafiye and check_word_whith_vazn(dell_last_U({'word':(i['word'] + radif['word']),'vazn':(i['vazn'] + radif['vazn'])})['vazn'], vazn):
+                  if not {'word': i['word'] + ' ' + radif['word'], 'vazn': i['vazn'] + radif['vazn']} in ghafiye_type_1:
+                      ghafiye_type_1 += [{'word': i['word'] + ' ' + radif['word'], 'vazn': i['vazn'] + radif['vazn']}]
+              try:
+                  if radif['word'][0] == 'ا' and i['word'][-(len(ghafiye)):] == ghafiye and check_word_whith_vazn(dell_last_U({'word':(i['word'] + radif['word']),'vazn':(i['vazn-1'] + radif['vazn-1'])})['vazn'], vazn):
+                      if not {'word': i['word'] + radif['word'], 'vazn': i['vazn-1'] + radif['vazn']} in ghafiye_type_2:
+                          ghafiye_type_2 += [{'word': i['word'] + ' ' + radif['word'], 'vazn': i['vazn-1'] + radif['vazn']}]
+              except:
+                  i = i
+          if len(ghafiye_type_1) > len(ghafiye_type_2):
+              ghafiye_arr = ghafiye_type_1
+          else:
+              ghafiye_arr = ghafiye_type_2
+          if ghafiye_arr == []:
+              return er7
+
+  
+      #mesra
+      def mesra(mesra_ghafiye):
+          txt = mesra_ghafiye['word']
+          vaz = dell_last_U(mesra_ghafiye)['vazn']
+          last_word = mesra_ghafiye['word'].split(' ')[0]
+          not_complited_vazn = vazn[:-(len(vaz))]
+          while not_complited_vazn != '':
+              array_of_words = []
+              for i in range(len(data)):
+                  try:
+                      if data[i+1] == last_word:
+                          if check_word_whith_vazn(data[i]['vazn'], not_complited_vazn):
+                              array_of_words += [data[i]]
+                          elif data[i+1]['word'][0] == 'ا' and check_word_whith_vazn(data[i]['vazn-1'], not_complited_vazn):
+                              array_of_words += [{'word' : data[i]['word'], 'vazn' : data[i]['vazn-1']}]
+                  except:
+                      i = i
+              if array_of_words == []:
+                  for i in range(len(data)):
+                      try:
+                          if check_word_whith_vazn(data[i]['vazn'], not_complited_vazn):
+                              array_of_words += [data[i]]
+                          elif data[i+1]['word'][0] == 'ا' and check_word_whith_vazn(data[i]['vazn-1'], not_complited_vazn):
+                              array_of_words += [{'word' : data[i]['word'], 'vazn' : data[i]['vazn-1']}]
+                      except:
+                          i = i 
+              word = random.choice(array_of_words)
+              vaz = word['vazn'] + vaz
+              not_complited_vazn = vazn[:-(len(vaz))]
+              txt = word['word'] + ' ' + txt
+              last_word = word['word']  
+          return txt
+  
+      #ghaleb
+      random_words = []
+      for i in data:
+          if check_word_whith_vazn(i['vazn'], vazn):
+              random_words += [i]
+      ghalebs_arr = ['مثنوی', 'غزل', 'قطعه', 'دوبیتی', 'رباعی']
+      sher_text = ''
+      ghafiye_arr *= int((abyat + 3) / (len(ghafiye_arr) + 0.1)) + 1
+      ghafiye_arr = ghafiye_arr[0:abyat + 1]
+      random.shuffle(ghafiye_arr)
+      if ghaleb == ghalebs_arr[0]:
+          for i in range(abyat):
+              sher_text += mesra(ghafiye_arr[i][0])
+              sher_text += '\n'
+              sher_text += mesra(ghafiye_arr[i][1])
+              sher_text += '\n'
+      elif ghaleb == ghalebs_arr[1]:
+          sher_text += mesra(ghafiye_arr[0])
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[1])
+          sher_text += '\n'
+          for i in range(abyat-1):
+              sher_text += mesra(random.choice(random_words))
+              sher_text += '\n'
+              sher_text += mesra(ghafiye_arr[i+2])
+              sher_text += '\n'
+      elif ghaleb == ghalebs_arr[2]:
+          for i in range(abyat):
+              sher_text += mesra(random.choice(random_words))
+              sher_text += '\n'
+              sher_text += mesra(ghafiye_arr[i])
+              sher_text += '\n'
+      elif ghaleb == ghalebs_arr[3]:
+          sher_text += mesra(ghafiye_arr[0])
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[1])
+          sher_text += '\n'
+          sher_text += mesra(random.choice(random_words))
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[2])
+          sher_text += '\n'
+      elif ghaleb == ghalebs_arr[4]:
+          sher_text += mesra(ghafiye_arr[0])
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[1])
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[2])
+          sher_text += '\n'
+          sher_text += mesra(ghafiye_arr[3])
+          sher_text += '\n'
+      sher_text += '<h2>شاعر: نرم‌افزار شاعرون</h2>'
+      sher_text = sher_text.replace('\n', '<br>')
+      return sher_text
+
+    def pr (i) :
+        Element("print").element.innerHTML = (sher('فردوسی', Element("ghafiye").element.value, Element("radif").element.value, Element("vazn").element.value, Element("abyat").element.value, Element("txt3").element.innerHTML))
+    
+    Element("btn").element.onclick = pr
+    </py-script>
+  </body>
+</html>

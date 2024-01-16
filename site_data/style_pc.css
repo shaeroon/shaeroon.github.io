@@ -1,0 +1,93 @@
+* {
+    margin: 0 auto;
+    padding: 0 auto;
+    box-sizing: border-box;
+    font-family: tanha;
+}
+@font-face {
+    font-family: javan;
+    src: url(javan.woff);
+}
+@font-face {
+    font-family: tanha;
+    src: url(Tanha.woff);
+}
+body {
+    overflow: hidden;
+    background-color: #adf8ff;
+}
+h1 {
+    display: none;
+}
+h2 {
+    font-family: javan;
+    font-size: 30px;
+    color: #003442;
+}
+p {
+    font-family: tanha;
+    font-size: 20px;
+    color: #003442;
+    margin-right: 50px; 
+}
+section {
+    display: inline-block;
+    width: 25vw;
+    height: 200px;
+}
+article {
+    display: flex;
+    height: 200px;
+    width: 100vw;
+}
+#print {
+    width: 95vw;
+    margin: 0 2.5vw;
+    padding: 3vw;
+    height: calc(100vh - 300px);
+    border: 5px solid #003442;
+    border-radius: 10px;
+    overflow: auto;
+    text-align: center;
+    font-size: 30px;
+}
+#ghafiye, #radif, #vazn, #abyat{
+    display: block;
+    width: 25vw;
+    box-shadow: inset 0px -1px 13px #003442;
+    background-color: #b0eeff;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+#btn {
+    display: block;
+    text-align: center;
+    width: 25vw;
+    box-shadow: inset 0px -1px 13px #adf8ff;
+    background-color: #007a9b;
+    border-radius: 10px;
+    border-radius: 10px;
+}
+header {
+    width: 100vw;
+    height: 90px;
+    display: flex;
+    background-color: #003442;
+    overflow: hidden;
+}
+::-webkit-scrollbar {
+    background-color:#0de9da00;
+    box-shadow: inset 0px -1px 13px rgba(2, 163, 175, 0);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    box-shadow: inset 0px -1px 13px #0205af;
+    border-radius: 10px;
+}
+img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+}
